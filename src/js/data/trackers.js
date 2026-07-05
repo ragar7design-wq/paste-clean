@@ -228,6 +228,11 @@ export const TRACKING_PARAMS = {
   terminal_id: { group: 'AliExpress', desc: 'AliExpress terminal ID.' },
   aff_request_id: { group: 'AliExpress', desc: 'AliExpress affiliate request ID.' },
   signal: { group: 'AliExpress', desc: 'AliExpress signal.' },
+  mixer_rcmd_bucket_id: { group: 'AliExpress', desc: 'AliExpress recommendation bucket ID.' },
+  ru_algo_pv_id: { group: 'AliExpress', desc: 'AliExpress Russia algorithm page view ID.' },
+  scenario: { group: 'AliExpress', desc: 'AliExpress recommendation scenario.' },
+  traffic_source: { group: 'AliExpress', desc: 'AliExpress traffic source.' },
+  type_rcmd: { group: 'AliExpress', desc: 'AliExpress recommendation type.' },
 
   // Amazon
   refRID: { group: 'Amazon', desc: 'Amazon ref RID.' },
@@ -459,7 +464,8 @@ export const DOMAIN_RULES = {
   'mozilla.org': ['src', 'platform', 'redirect_source'],
   'indeed.com': ['from', 'alid', 'tk', 'atk', 'vjk'],
   'hh.ru': ['vss', 't', 'swnt', 'grpos', 'ptl', 'stl', 'exp', 'plim'],
-  'aliexpress.com': ['ws_ab_test', 'btsid', 'algo_expid', 'algo_pvid', 'gps-id', 'scm', 'scm_id', 'scm-url', 'cv', 'af', 'mall_affr', 'sk', 'dp', 'terminal_id', 'aff_request_id', 'pvid', 'spm', '_t', 'pdp_ext_f', 'pdp_npi', 'utparam-url', 'tpp_buckets'],
+  'aliexpress.com': ['ws_ab_test', 'btsid', 'algo_expid', 'algo_pvid', 'gps-id', 'scm', 'scm_id', 'scm-url', 'cv', 'af', 'mall_affr', 'sk', 'dp', 'terminal_id', 'aff_request_id', 'pvid', 'spm', '_t', 'pdp_ext_f', 'pdp_npi', 'utparam-url', 'tpp_buckets', 'mixer_rcmd_bucket_id', 'ru_algo_pv_id', 'scenario', 'traffic_source', 'type_rcmd'],
+  'aliexpress.ru': ['ws_ab_test', 'btsid', 'algo_expid', 'algo_pvid', 'gps-id', 'scm', 'scm_id', 'scm-url', 'cv', 'af', 'mall_affr', 'sk', 'dp', 'terminal_id', 'aff_request_id', 'pvid', 'spm', '_t', 'pdp_ext_f', 'pdp_npi', 'utparam-url', 'tpp_buckets', 'mixer_rcmd_bucket_id', 'ru_algo_pv_id', 'scenario', 'traffic_source', 'type_rcmd'],
   'amazon.com': ['ref', 'ref_', 'tag', 'ascsubtag', 'qid', 'sr', 'srs', 'th', 'sprefix', 'keywords', 'pvid', 'spm', 'gps-id', 'scm', 'scm_id', 'scm-url', 'smid', 'spIA', 'ms3_c', 'refRID', 'colid', 'collid', 'adId', 'qualifier', '_encoding', 'crid', 'linkCode', 'creativeASIN', 'aaxitk', 'hsa_cr_id', 'rnid', 'dchild', 'camp', 'creative', 'content-id', 'dib', 'dib_tag', 'social_share', 'starsLeft', 'skipTwisterOG'],
   'youtube.com': ['feature', 'gclid', 'kw', 'si', 'pp', 'gl', 'hl', 'src', 'pc', 'cm', 'm', 'cbrd', 'sub_confirmation', 'gcb', 'ucbcb'],
   'youtu.be': ['feature', 'gclid', 'kw', 'si', 'pp', 'gl', 'hl', 'src', 'pc', 'cm', 'm', 'cbrd', 'sub_confirmation', 'gcb', 'ucbcb'],

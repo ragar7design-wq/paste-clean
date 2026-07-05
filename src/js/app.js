@@ -2,7 +2,7 @@ import { cleanUrl, restoreParam } from './modules/urlCleaner.js';
 import { inspectText } from './modules/textInspector.js';
 import { xray } from './modules/xray.js';
 import { copyText, readClipboard } from './modules/clipboard.js';
-import { el, renderResult } from './modules/ui.js';
+import { el, renderResult, truncatedEl, truncateUrl } from './modules/ui.js';
 import { track, trackSummary } from './modules/analytics.js';
 
 let mode = 'url';
@@ -31,8 +31,9 @@ async function handlePaste() {
 
 function makeRow(key, value, state, meta, onUndo) {
   const row = el('div', { class: `pc-row ${state}` });
-  row.appendChild(el('span', { class: 'pc-key', text: `${key}=${value}` }));
-  const right = el('div', { style: 'display:flex;gap:8px;align-items:center' });
+  const keySpan = truncatedEl(`${key}=${value}`, 48, 'pc-key');
+  row.appendChild(keySpan);
+  const right = el('div', { style: 'display:flex;gap:8px;align-items:center;flex-shrink:0' });
   if (meta) right.appendChild(el('span', { class: 'pc-mono', style: 'color:var(--c-text-muted);font-size:11px', title: meta.desc, text: meta.group }));
   right.appendChild(el('span', { class: `pc-tag ${state}`, text: state === 'removed' ? 'REMOVED' : 'KEPT' }));
   if (state === 'removed' && onUndo) right.appendChild(el('button', { class: 'pc-undo', text: '↩ восстановить', onclick: onUndo }));
@@ -46,7 +47,12 @@ function processUrl(value) {
   lastClean = r.clean;
   const rows = r.removed.map(item => makeRow(item.key, item.value, 'removed', item.meta, () => {
     lastClean = restoreParam(lastClean, item.key, item.value);
-    document.querySelector('.pc-clean-url').textContent = lastClean;
+    const cleanEl = document.querySelector('.pc-clean-url-text') || document.querySelector('.pc-clean-url');
+    if (cleanEl) {
+      cleanEl.title = lastClean;
+      cleanEl.textContent = lastClean.length > 72 ? truncateUrl(lastClean, 72) : lastClean;
+      cleanEl.classList.remove('pc-truncated-expanded');
+    }
   })).concat(r.kept.map(item => makeRow(item.key, item.value, 'kept')));
   renderResult({
     title: 'URL Cleaner',
@@ -90,7 +96,7 @@ async function processXray(value) {
   const rows = r.chain.map((h, i) => {
     const row = el('div', { class: 'pc-hop' });
     row.appendChild(el('span', { class: 'pc-hop-num', text: `${i + 1}.` }));
-    row.appendChild(el('span', { class: 'pc-hop-url', text: h.url }));
+    row.appendChild(truncatedEl(h.url, 64, 'pc-hop-url'));
     const st = el('span', { class: 'pc-hop-status', text: `${h.status} ${h.safe ? 'OK' : '⚠'}` });
     st.style.color = h.safe ? 'var(--c-success)' : 'var(--c-danger)';
     st.style.background = h.safe ? 'color-mix(in srgb,var(--c-success) 12%,transparent)' : 'color-mix(in srgb,var(--c-danger) 12%,transparent)';
@@ -132,13 +138,6 @@ document.getElementById('clear-btn').addEventListener('click', () => {
 });
 let t;
 input.addEventListener('input', () => { clearTimeout(t); t = setTimeout(process, 150); });
-
-document.getElementById('pwa-btn').addEventListener('click', () => {
-  if (window.deferredPrompt) { window.deferredPrompt.prompt(); }
-  else alert('PWA: откройте меню браузера → «Установить приложение».');
-});
-
-window.addEventListener('beforeinstallprompt', (e) => { window.deferredPrompt = e; });
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));

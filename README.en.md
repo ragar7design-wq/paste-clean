@@ -41,10 +41,11 @@ Three modes in one window:
 Removes tracking parameters from URLs. Database based on [ClearURLs](https://gitlab.com/anti-tracking/ClearURLs/rules) and regularly updated.
 
 - Regex pattern support (`utm_*`, `pf_rd_*`, `hc_*`, etc.)
-- Domain-specific rules (Amazon, YouTube, AliExpress, Bilibili, etc.)
+- Domain-specific rules (Amazon, YouTube, AliExpress / aliexpress.ru, Bilibili, etc.)
 - Unwraps nested redirect URLs (`continue`, `url`, `q`)
 - Preserves real anchor fragments (`#section`)
 - One-click undo for a specific removed parameter
+- Long URLs in the UI are automatically truncated with an ellipsis — click to expand
 
 ### Text Inspector
 Finds and removes invisible Unicode characters:
@@ -60,7 +61,7 @@ Unfolds redirect chains of short links:
 - Server-side proxy — no browser CORS blocks
 
 ### PWA
-Installs as an app, works offline (except X-Ray).
+Installs as an app via the browser menu "Add to Home Screen", works offline (except X-Ray).
 
 ---
 

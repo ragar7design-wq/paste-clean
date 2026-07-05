@@ -1,4 +1,5 @@
 import { spawn } from 'node:child_process';
+import './build.mjs';
 
 const PORT = Number(process.env.PORT || 5173);
 const API_PORT = PORT + 1;
