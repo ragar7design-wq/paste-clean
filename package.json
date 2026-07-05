@@ -1,0 +1,26 @@
+{
+  "name": "paste-clean",
+  "version": "1.0.0",
+  "description": "PasteClean — browser tool for cleaning URLs and text from tracking parameters and invisible characters",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/build.mjs",
+    "test": "node --test src/js/modules/*.test.mjs",
+    "start": "node scripts/server.mjs"
+  },
+  "keywords": [
+    "url",
+    "tracker",
+    "privacy",
+    "cleaner",
+    "xray",
+    "paste-clean"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/ragar7design-wq/paste-clean",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ragar7design-wq/paste-clean.git"
+  }
+}

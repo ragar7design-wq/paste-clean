@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="PasteClean — очистка URL и текста от трекеров и невидимых символов. Без сервера, логов и аккаунтов.">
+<meta name="theme-color" content="#0A0A0F">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/favicon/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/favicon/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.1"></script>
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/components.css">
+<link rel="stylesheet" href="/css/animations.css">
+<title>PasteClean — очистка URL и текста</title>
+</head>
+<body>
+  <header class="pc-header">
+    <div class="pc-logo">[paste/clean]</div>
+    <nav class="pc-nav">
+      <a href="https://github.com/ragar7design-wq/paste-clean" target="_blank" rel="noopener" class="pc-link">GitHub</a>
+      <button id="pwa-btn" class="pc-btn-ghost">Установить PWA</button>
+    </nav>
+  </header>
+
+  <main class="pc-main">
+    <section class="pc-hero">
+      <h1 class="pc-display">Очисти вставленное.<br>Без следа.</h1>
+      <p class="pc-sub">Вставьте URL или текст — PasteClean уберёт трекеры, невидимые символы и развернёт редиректы. Всё в браузере.</p>
+    </section>
+
+    <section class="pc-pastezone" id="paste-zone">
+      <textarea id="paste-input" class="pc-pastearea" placeholder="Вставьте URL или текст... [Ctrl+V]" autocomplete="off" spellcheck="false"></textarea>
+      <div class="pc-pastezone-actions">
+        <button id="paste-btn" class="pc-btn-primary">Вставить</button>
+        <button id="clear-btn" class="pc-btn-ghost">Очистить</button>
+      </div>
+    </section>
+
+    <section class="pc-tools">
+      <button class="pc-tab" data-mode="url" id="tab-url">
+        <span class="pc-tab-ico">link</span> URL Cleaner
+      </button>
+      <button class="pc-tab" data-mode="text" id="tab-text">
+        <span class="pc-tab-ico">text</span> Text Inspector
+      </button>
+      <button class="pc-tab" data-mode="xray" id="tab-xray">
+        <span class="pc-tab-ico">xray</span> X-Ray Redirects
+      </button>
+    </section>
+
+    <section id="result-panel" class="pc-result hidden">
+      <div class="pc-result-head">
+        <span id="result-title" class="pc-headline">Результат</span>
+        <span id="result-stats" class="pc-stats"></span>
+      </div>
+      <div id="result-body" class="pc-result-body"></div>
+      <div class="pc-result-actions">
+        <button id="copy-btn" class="pc-btn-primary">Копировать</button>
+        <button id="open-btn" class="pc-btn-ghost">Открыть</button>
+        <button id="sweep-btn" class="pc-btn-ghost">Очистить всё</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pc-footer">
+    <span>No server. No logs. No account.</span>
+  </footer>
+
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

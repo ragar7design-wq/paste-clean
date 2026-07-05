@@ -1,0 +1,9 @@
+@keyframes pc-reveal { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pc-shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-4px); } 40%,80% { transform: translateX(4px); } }
+@keyframes pc-sweep { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes pc-strike { from { text-decoration-color: transparent; } to { text-decoration-color: var(--c-danger); } }
+
+.pc-row.removed { animation: pc-shake .3s ease; }
+.pc-row.removed .pc-key { text-decoration: line-through; animation: pc-strike .3s forwards; }
+.pc-sweep { animation: pc-sweep .4s ease; }
+.pc-copied { background: var(--c-success) !important; color: #052e16 !important; }

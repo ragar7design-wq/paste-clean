@@ -1,0 +1,12 @@
+{
+  "name": "PasteClean",
+  "short_name": "PasteClean",
+  "description": "Remove trackers from URLs and invisible characters from text instantly",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0F",
+  "theme_color": "#6EE7F7",
+  "icons": [
+    { "src": "/favicon/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
