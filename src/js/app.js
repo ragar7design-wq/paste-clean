@@ -66,6 +66,7 @@ function renderUrlState() {
   body.innerHTML = '';
   const rows = removed.map(item => makeUrlRow(item, () => toggleParam(item.key))).concat(kept.map(item => makeUrlRow(item, () => toggleParam(item.key))));
   for (const r of rows) body.appendChild(r);
+  body.appendChild(el('div', { class: 'pc-clean-url' }, [truncatedEl(lastClean, 72, 'pc-clean-url-text')]));
 
   const total = currentUrlParams.length;
   const savedPct = total > 0 ? Math.round((removed.length / total) * 100) : 0;

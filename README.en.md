@@ -6,7 +6,8 @@
 
 <p align="center">
   Clean URLs and text from trackers and invisible characters.<br>
-  No server. No logs. No accounts.
+  URL Cleaner and Text Inspector run in the browser. X-Ray uses a server proxy with no logs or storage.<br>
+  No accounts.
 </p>
 
 <p align="center">
