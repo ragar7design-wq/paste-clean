@@ -117,3 +117,39 @@ export function restoreParam(currentClean, key, value) {
   u.searchParams.set(key, value);
   return u.toString();
 }
+
+export function removeParam(currentClean, key) {
+  const u = new URL(currentClean);
+  u.searchParams.delete(key);
+  return u.toString();
+}
+
+export function rebuildCleanUrl(baseUrl, keptEntries) {
+  let url;
+  try {
+    const qIdx = baseUrl.indexOf('?');
+    if (qIdx >= 0) {
+      const queryAndHash = baseUrl.slice(qIdx + 1);
+      const hashIdx = queryAndHash.indexOf('#');
+      if (hashIdx >= 0) {
+        const afterHash = queryAndHash.slice(hashIdx + 1);
+        if (afterHash.includes('=') || afterHash.includes('&')) {
+          const before = baseUrl.slice(0, qIdx + 1);
+          const after = baseUrl.slice(qIdx + 1).replace(/#/g, '%23');
+          url = new URL(before + after);
+        } else {
+          url = new URL(baseUrl);
+        }
+      } else {
+        url = new URL(baseUrl);
+      }
+    } else {
+      url = new URL(baseUrl);
+    }
+  } catch { return baseUrl; }
+
+  const cleanUrlObj = new URL(url.origin + url.pathname);
+  for (const { key, value } of keptEntries) cleanUrlObj.searchParams.set(key, value);
+  if (url.hash) cleanUrlObj.hash = url.hash;
+  return cleanUrlObj.toString();
+}

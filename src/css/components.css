@@ -75,8 +75,11 @@
 .pc-tag { padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
 .pc-tag.removed { background: color-mix(in srgb, var(--c-danger) 15%, transparent); color: var(--c-danger); border: 1px solid var(--c-danger); }
 .pc-tag.kept { background: color-mix(in srgb, var(--c-success) 15%, transparent); color: var(--c-success); border: 1px solid var(--c-success); }
-.pc-undo { background: transparent; border: 1px solid var(--c-outline); border-radius: var(--r-btn); color: var(--c-text-muted); padding: 2px 8px; font-size: 11px; cursor: pointer; }
+.pc-undo { background: transparent; border: 1px solid var(--c-outline); border-radius: var(--r-btn); color: var(--c-text-muted); padding: 2px 8px; font-size: 11px; cursor: pointer; white-space: nowrap; }
 .pc-undo:hover { color: var(--c-text); border-color: var(--c-primary); }
+.pc-row { cursor: default; }
+.pc-row.removed .pc-undo:hover { color: var(--c-success); border-color: var(--c-success); }
+.pc-row.kept .pc-undo:hover { color: var(--c-danger); border-color: var(--c-danger); }
 .pc-result-actions { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
 .pc-clean-url { padding: 12px; background: var(--c-bg); border: 1px solid var(--c-success); border-radius: var(--r-btn); font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--c-success); overflow: hidden; }
 .pc-clean-url-text { display: inline-block; max-width: 100%; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

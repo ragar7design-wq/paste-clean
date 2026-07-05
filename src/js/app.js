@@ -1,4 +1,4 @@
-import { cleanUrl, restoreParam } from './modules/urlCleaner.js';
+import { cleanUrl, restoreParam, removeParam, rebuildCleanUrl } from './modules/urlCleaner.js';
 import { inspectText } from './modules/textInspector.js';
 import { xray } from './modules/xray.js';
 import { copyText, readClipboard } from './modules/clipboard.js';
@@ -29,42 +29,102 @@ async function handlePaste() {
   if (text) { input.value = text; process(); }
 }
 
-function makeRow(key, value, state, meta, onUndo) {
+let currentUrlParams = [];
+let currentBaseUrl = '';
+let currentUnwrapped = false;
+
+function makeUrlRow({ key, value, state, meta }, onToggle) {
   const row = el('div', { class: `pc-row ${state}` });
   const keySpan = truncatedEl(`${key}=${value}`, 48, 'pc-key');
   row.appendChild(keySpan);
   const right = el('div', { style: 'display:flex;gap:8px;align-items:center;flex-shrink:0' });
   if (meta) right.appendChild(el('span', { class: 'pc-mono', style: 'color:var(--c-text-muted);font-size:11px', title: meta.desc, text: meta.group }));
   right.appendChild(el('span', { class: `pc-tag ${state}`, text: state === 'removed' ? 'REMOVED' : 'KEPT' }));
-  if (state === 'removed' && onUndo) right.appendChild(el('button', { class: 'pc-undo', text: '↩ восстановить', onclick: onUndo }));
+  const btnText = state === 'removed' ? '↩ восстановить' : '✕ удалить';
+  right.appendChild(el('button', { class: 'pc-undo', text: btnText, onclick: onToggle }));
   row.appendChild(right);
   return row;
+}
+
+function updateCleanUrlDisplay(clean) {
+  lastClean = clean;
+  const cleanEl = document.querySelector('.pc-clean-url-text') || document.querySelector('.pc-clean-url');
+  if (cleanEl) {
+    cleanEl.title = clean;
+    cleanEl.textContent = clean.length > 72 ? truncateUrl(clean, 72) : clean;
+    cleanEl.classList.remove('pc-truncated-expanded');
+  }
+}
+
+function renderUrlState() {
+  const kept = currentUrlParams.filter(p => p.state === 'kept');
+  const removed = currentUrlParams.filter(p => p.state === 'removed');
+  lastClean = rebuildCleanUrl(currentBaseUrl, kept);
+  updateCleanUrlDisplay(lastClean);
+
+  const body = document.getElementById('result-body');
+  body.innerHTML = '';
+  const rows = removed.map(item => makeUrlRow(item, () => toggleParam(item.key))).concat(kept.map(item => makeUrlRow(item, () => toggleParam(item.key))));
+  for (const r of rows) body.appendChild(r);
+
+  const total = currentUrlParams.length;
+  const savedPct = total > 0 ? Math.round((removed.length / total) * 100) : 0;
+  const stats = `${currentUnwrapped ? '🔗 URL распакован · ' : ''}Удалено ${removed.length}, сохранено ${kept.length}, URL короче на ${savedPct}%`;
+  const statsEl = document.getElementById('result-stats');
+  statsEl.textContent = stats;
+  statsEl.title = stats;
+
+  trackSummary('url', { removedCount: removed.length, keptCount: kept.length, savedPct });
+}
+
+function toggleParam(key) {
+  const p = currentUrlParams.find(x => x.key === key);
+  if (!p) return;
+  p.state = p.state === 'removed' ? 'kept' : 'removed';
+  renderUrlState();
 }
 
 function processUrl(value) {
   const r = cleanUrl(value);
   if (!r.ok) { renderResult({ title: 'Ошибка', stats: r.error }); return; }
-  lastClean = r.clean;
-  const rows = r.removed.map(item => makeRow(item.key, item.value, 'removed', item.meta, () => {
-    lastClean = restoreParam(lastClean, item.key, item.value);
-    const cleanEl = document.querySelector('.pc-clean-url-text') || document.querySelector('.pc-clean-url');
-    if (cleanEl) {
-      cleanEl.title = lastClean;
-      cleanEl.textContent = lastClean.length > 72 ? truncateUrl(lastClean, 72) : lastClean;
-      cleanEl.classList.remove('pc-truncated-expanded');
+
+  let url;
+  try {
+    const raw = value.trim();
+    const qIdx = raw.indexOf('?');
+    if (qIdx >= 0) {
+      const queryAndHash = raw.slice(qIdx + 1);
+      const hashIdx = queryAndHash.indexOf('#');
+      if (hashIdx >= 0 && (queryAndHash.slice(hashIdx + 1).includes('=') || queryAndHash.slice(hashIdx + 1).includes('&'))) {
+        url = new URL(raw.slice(0, qIdx + 1) + raw.slice(qIdx + 1).replace(/#/g, '%23'));
+      } else {
+        url = new URL(raw);
+      }
+    } else {
+      url = new URL(raw);
     }
-  })).concat(r.kept.map(item => makeRow(item.key, item.value, 'kept')));
+  } catch { renderResult({ title: 'Ошибка', stats: 'Невалидный URL' }); return; }
+
+  currentBaseUrl = url.origin + url.pathname + (url.hash || '');
+  currentUnwrapped = r.unwrapped || false;
+
+  currentUrlParams = [
+    ...r.removed.map(item => ({ key: item.key, value: item.value, state: 'removed', meta: item.meta })),
+    ...r.kept.map(item => ({ key: item.key, value: item.value, state: 'kept', meta: null }))
+  ];
+
   renderResult({
     title: 'URL Cleaner',
-    stats: `${r.unwrapped ? '🔗 URL распакован · ' : ''}Удалено ${r.stats.removedCount}, сохранено ${r.stats.keptCount}, URL короче на ${r.stats.savedPct}%`,
-    rows, cleanUrl: r.clean,
+    stats: '',
+    rows: [],
+    cleanUrl: r.clean,
     actions: {
       onCopy: async () => { await copyText(lastClean); flashCopy(); },
       onOpen: () => { if (lastClean) window.open(lastClean, '_blank', 'noopener'); },
       onSweep: () => { input.value = ''; document.getElementById('result-panel').classList.add('hidden'); }
     }
   });
-  trackSummary('url', r.stats);
+  renderUrlState();
 }
 
 function processText(value) {
